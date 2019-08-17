@@ -7,14 +7,14 @@ function cargarNombre(e){
     //Leer los campos
     const origen = document.getElementById('origen');
     const origenSeleccionado = origen.options[origen.selectedIndex].value;
-    console.log(origenSeleccionado);
+    //console.log(origenSeleccionado);
 
     const genero = document.getElementById('genero');
     const generoSeleccionado = genero.options[genero.selectedIndex].value;
-    console.log(generoSeleccionado);
+    //console.log(generoSeleccionado);
 
     const cantidad = document.getElementById('numero').value;
-    console.log(cantidad);
+    //console.log(cantidad);
 
     let url = 'https://uinames.com/api/?';
 
@@ -32,6 +32,36 @@ function cargarNombre(e){
     if( cantidad !== '' ){
         url += `amount=${cantidad}&`;
     }
-    
-    console.log(url);
+    //console.log(url);
+
+    //CONECTAR CON AJAX
+    // 1. Inicializar XMLHTTPRequest
+    const xhr = new XMLHttpRequest();
+
+    // 2. Abrir la conexión
+    xhr.open('GET', url, true);
+
+    // 3. Recuperar datos e imprimir template
+    xhr.onload = function(){
+        if( this.status === 200 ){
+            console.log(this.responseText);
+            console.log(JSON.parse(this.responseText));
+            const nombres = JSON.parse(this.responseText);
+            //Generar el HTML
+            let htmlNombres = '<h2>Nombres Generados</h2>';
+            htmlNombres += '<ul class="lista">';
+            //Imprimir cada nombre
+            nombres.forEach( function(nombre) {
+                htmlNombres += `
+                        <li>${nombre.name}</li>
+                `;
+            });
+            htmlNombres += '</ul>';
+
+            document.getElementById('resultado').innerHTML = htmlNombres;
+        }
+    }
+
+    // 4. Enviar el Request
+    xhr.send();
 }
